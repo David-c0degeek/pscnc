@@ -5,7 +5,7 @@ function fcopy ([string]$SourceDir, [string]$DestinationDir, [bool]$CheckDuplica
 
 		$SourceFileHash = $(Get-FileHash $SourceFile).Hash
 
-		# Very rundamentary, checks hash to compare images. need to implement a proper way
+		# Very rudimentary, checks hash to compare images. need to implement a proper way
 		if ($CheckDuplicates) {
 			if($DestinationFileHashes -contains $SourceFileHash){
 				continue;
