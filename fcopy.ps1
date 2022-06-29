@@ -1,5 +1,17 @@
 function fcopy ([string]$SourceDir, [string]$DestinationDir, [bool]$CheckDuplicates = $false) {
 	$DestinationFileHashes = @()
+    
+	if ($CheckDuplicates) {
+		$AllFilesInDestination = Get-ChildItem $DestinationDir -Recurse | Where-Object { $_.PSIsContainer -eq $false }
+		foreach ($DestinationFile in $AllFilesInDestination) {
+			$DestinationFileHash = $(Get-FileHash $DestinationFile).Hash
+			if ($DestinationFileHashes -contains $DestinationFileHash) {
+				continue;
+			}
+			$DestinationFileHashes += DestinationFileHash
+		}
+	}
+    
 	$AllFilesInSource = Get-ChildItem $SourceDir -Recurse | Where-Object { $_.PSIsContainer -eq $false }
 	foreach ($SourceFile in $AllFilesInSource) {
 
@@ -7,7 +19,7 @@ function fcopy ([string]$SourceDir, [string]$DestinationDir, [bool]$CheckDuplica
 
 		# Very rudimentary, checks hash to compare images. need to implement a proper way
 		if ($CheckDuplicates) {
-			if($DestinationFileHashes -contains $SourceFileHash){
+			if ($DestinationFileHashes -contains $SourceFileHash) {
 				continue;
 			}
 		}
