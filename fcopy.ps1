@@ -1,5 +1,5 @@
 function fcopy ([string]$SourceDir, [string]$DestinationDir, [bool]$CheckDuplicates = $false) {
-	$DestinationFileHashes = @('a')
+	$DestinationFileHashes = @()
 	$AllFilesInSource = Get-ChildItem $SourceDir -Recurse | Where-Object { $_.PSIsContainer -eq $false }
 	foreach ($SourceFile in $AllFilesInSource) {
 		$SourceFileHash = $(Get-FileHash $SourceFile).Hash
