@@ -1,20 +1,21 @@
 function fcopy ([string]$SourceDir, [string]$DestinationDir, [bool]$CheckDuplicates = $false) {
-	Get-ChildItem $SourceDir -Recurse | Where-Object { $_.PSIsContainer -eq $false } | ForEach-Object ($_) {
-		$SourceFile = $_.FullName
+	$DestinationFileHashes = @('a')
+	$AllFilesInSource = Get-ChildItem $SourceDir -Recurse | Where-Object { $_.PSIsContainer -eq $false }
+	foreach ($SourceFile in $AllFilesInSource) {
+		$SourceFileHash = $(Get-FileHash $SourceFile).Hash
 		$i = 0
-		$DestinationFile = $DestinationDir + $_.BaseName + $_.extension
-		while (Test-Path $DestinationFile) {
-			if ($CheckDuplicates) {
-				# Very rundamentary, need to implement a proper way
-				# 	1. Doesn't take into account different filenames
-				# 	2. Only checks hash to compare images
-				if ($(Get-FileHash $SourceFile).Hash -eq $(Get-FileHash $DestinationFile).Hash) {
-					return;
-				}
+		$DestinationFile = $DestinationDir + $SourceFile.BaseName + $SourceFile.extension
+		# Very rundamentary, checks hash to compare images. need to implement a proper way
+		if ($CheckDuplicates) {
+			if($DestinationFileHashes -contains $SourceFileHash){
+				continue;
 			}
-			$DestinationFile = $DestinationDir + $_.BaseName + $i + $_.extension
+		}
+		while (Test-Path $DestinationFile) {
+			$DestinationFile = $DestinationDir + $SourceFile.BaseName + $i + $SourceFile.extension
 			$i += 1
 		}
 		Copy-Item -Path $SourceFile -Destination $DestinationFile -Verbose -Force
+		$DestinationFileHashes += $SourceFileHash
 	}
 }
