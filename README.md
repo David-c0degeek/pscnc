@@ -1,6 +1,7 @@
 # pscnc
-Powershell script to copy files from a folder structure into a flat destination, checks for duplicates (rundamentary) and creates new filenames incase of duplicate file names
-
+Powershell script to copy files from a folder structure (recursive) into a flat destination, 
+1. Changes filename if destination already has a file with the same name
+1. [Optional] Checks for duplicates (rundamentary, based on hash)
 
 Usage: 
 ``` Shell
