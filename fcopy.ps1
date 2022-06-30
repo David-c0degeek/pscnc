@@ -8,7 +8,7 @@ function fcopy ([string]$SourceDir, [string]$DestinationDir, [bool]$CheckDuplica
 			if ($DestinationFileHashes -contains $DestinationFileHash) {
 				continue;
 			}
-			$DestinationFileHashes += DestinationFileHash
+			$DestinationFileHashes += $DestinationFileHash
 		}
 	}
     
